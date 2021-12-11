@@ -32,6 +32,11 @@ ssize_t ft_memcat(char **line,t_fd_info *info,size_t size)
 	{
 		size = INITIAL_ALLOCATE_SIZE;
 		*line = (char *)malloc(size);
+		if (*line == NULL)
+		{
+			info -> sign = ERR;
+			return (ERR);
+		}
 	}
 	else 
 	{
@@ -50,25 +55,23 @@ ssize_t ft_memcat(char **line,t_fd_info *info,size_t size)
 char    *get_next_line(int fd)
 {
 	char *line;
-	static t_fd_info fd_info; 
+	static t_fd_info fd_info = {0};; 
 	ssize_t mallocsize;
 	size_t i;
 
 	i = 0;
 	mallocsize = 0;
-	fd_info = (struct s_fd_info){ 0 };
 	line = NULL;
 	if (fd_info.buf == NULL)
 		fd_read_str(&fd_info,fd);
-	while (fd_info.sign == 0 || fd_info.index >= fd_info.read_bytes)
+	while (fd_info.sign == 0 && fd_info.index <= fd_info.read_bytes)
 	{
 		if (mallocsize <= fd_info.index)
 			mallocsize = ft_memcat(&line,&fd_info,mallocsize);
 		line[i] = fd_info.buf[fd_info.index];
-		if (line[i] == '\n')
+		printf("%c",fd_info.buf[fd_info.index++]);
+		if (line[i++] == '\n')
 			return (line);
-		fd_info.index++;
-		i++;
 	}
 	return(safely_return(&fd_info,&line));
 }

@@ -4,9 +4,9 @@ int main(void)
 {
 	int fd;
 
-	fd = open("./test_txt", O_RDONLY);
+	fd = open("./test.txt", O_RDONLY);
 	char *s;
 
 	s = get_next_line(fd);
-	printf("%s",s);
+	s = get_next_line(fd);
 }
