@@ -10,11 +10,11 @@
 # endif
 
 # define ERR -1
-# define EOF -2
+# define EndofFile -2
 
 # include <stdlib.h>
 # include <unistd.h>
-
+# include <stdio.h>
 typedef struct s_fd_info
 {
         char    *buf;
