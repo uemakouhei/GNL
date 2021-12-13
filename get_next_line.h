@@ -2,7 +2,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 2
 # endif
 
 # ifndef INITIAL_ALLOCATE_SIZE
@@ -17,12 +17,13 @@
 # include <stdio.h>
 typedef struct s_fd_info
 {
-        char    *buf;
+        void*    *buf;
         ssize_t index;
 	ssize_t read_bytes;
 	int sign;
 }       t_fd_info;
-void    *ft_memcpy(void *dst, const void *src, size_t n);
+void    *ft_calloc(size_t count, size_t size);
+void    *ft_memmove(void *dst, const void *src, size_t len);
 char    *get_next_line(int fd);
 #endif
 
