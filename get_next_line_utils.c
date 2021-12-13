@@ -14,25 +14,6 @@ void    *ft_memcpy(void *dst, const void *src, size_t n)
         }
         return (dst);
 }
-void    *ft_memmove(void *dst, const void *src, size_t len)
-{
-        char            *pt;
-        const char      *srcpt;
-
-        srcpt = (char *)src;
-        pt = (char *)dst;
-        if (pt == NULL && srcpt == NULL)
-                return (NULL);
-        if (dst < src)
-                ft_memcpy(dst, src, len);
-        else
-        {
-                while (len-- > 0)
-                        pt[len] = srcpt[len];
-        }
-        return (dst);
-}
-
 void    ft_bzero(void *s, size_t n)
 {
         char    *pt;

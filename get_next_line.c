@@ -1,7 +1,6 @@
 #include "get_next_line.h"
 static char     *safely_return(t_fd_info *info,char **line)
 {
-	puts("in safly");
 	free(info -> buf);
 	if (info -> sign == EndofFile)
 	{
@@ -13,37 +12,50 @@ static char     *safely_return(t_fd_info *info,char **line)
 
 static ssize_t fd_read_buf(t_fd_info *info,int fd)
 {
-	if (info -> buf == NULL || info -> index >= info -> read_bytes)
+	if (info -> buf == NULL || info -> index + 1 >= info -> read_bytes)
 	{
-		free(info->buf);
 		info->buf = (char *)ft_calloc(sizeof(char),BUFFER_SIZE);
 		if (info->buf == NULL)
 			return (ERR);
 		info->read_bytes = read(fd, info->buf, BUFFER_SIZE);
-		printf("read.buf = %s\n",info -> buf);
 		if (info->read_bytes < 0)
 			return (ERR);
 		if (info->read_bytes == 0)
 			return (EndofFile);
 		info->index = 0;
 	}
-	else 
+	else  
 		info -> index++;
+	if (info -> sign != 0)
+		return (0);
 	return (1);
 }
-ssize_t ft_memcat(char **line,t_fd_info *info,size_t size)
+
+static ssize_t ft_memcat(char **line,t_fd_info *info,ssize_t *mallocsize)
 {
-	static void *ptr;
+	void *ptr;
+
+	ptr = NULL;
 	if (*line == NULL)
-		size = INITIAL_ALLOCATE_SIZE;
+	{
+		*mallocsize = INITIAL_ALLOCATE_SIZE;
+		*line = (char *)malloc(sizeof(char) * *mallocsize);
+	}
 	else 
-		size *= 2;	
-	ptr = malloc(sizeof(char) * size);
-	if (ptr == NULL)
-		info -> sign = ERR;
-	*line = (char *)ptr;
-	return (size);
-}
+	{
+		ptr = (char *)malloc(sizeof(char) * (*mallocsize * 2));
+		if (ptr == NULL)
+		{
+			info -> sign = ERR;
+			return (0);
+		}
+		ft_memcpy(ptr,*line,*mallocsize);
+		*mallocsize *= 2;
+		free(*line);
+		*line = (char *)ptr;
+	}
+	return (1);
+};
 char    *get_next_line(int fd)
 {
 	char *line;
@@ -58,18 +70,14 @@ char    *get_next_line(int fd)
 	{
 		if (i + 1 >= mallocsize)
 		{
-			mallocsize = 256;
-			//mallocsize = ft_memcat(&line,&fd_info,mallocsize);
-			line = (char *)malloc(sizeof(char) * 256);
+			if (!ft_memcat(&line,&fd_info,&mallocsize))
+				return (NULL);
+			//mallocsize = 256;
+			//line = (char *)malloc(sizeof(char) * 256);
 		}
 		line[i] = fd_info.buf[fd_info.index];
-		printf("index %ld : %c\n",i,line[i]);
 		if (line[i++] == '\n')
-		{
-			printf("(%s)\n",line);
-			//printf("return : %s\n",line);
 			return (line);
-		}
 	}
 	return(safely_return(&fd_info,&line));
-}
+};
