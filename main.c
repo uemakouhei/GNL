@@ -6,7 +6,7 @@ int main(void)
 	int count = TEST_COUNT;
 
 	i = 0;
-	fd = open("./test.txt", O_RDONLY); 
+	fd = open("./test", O_RDONLY); 
 	while (count != 0)
 	{
 		printf("line %d : %s\n",i,get_next_line(fd));

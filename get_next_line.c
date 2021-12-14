@@ -4,6 +4,7 @@ static char     *safely_return(t_fd_info *info,char **line)
 	free(info -> buf);
 	if (info -> sign == EndofFile)
 	{
+		printf("%ld\n",info -> read_bytes);
 		info -> buf = NULL;
 		return(*line);
 	}
