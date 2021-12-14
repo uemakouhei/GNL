@@ -2,13 +2,16 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100
+#  define BUFFER_SIZE 3
 # endif
 
 # ifndef INITIAL_ALLOCATE_SIZE
 #  define INITIAL_ALLOCATE_SIZE 100
 # endif
-
+	
+# ifndef TEST_COUNT
+#  define TEST_COUNT 5
+# endif
 # define ERR -1
 # define EndofFile -2
 
