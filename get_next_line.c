@@ -17,7 +17,8 @@ static ssize_t fd_read_buf(t_fd_info *info,int fd)
 {
 	if (info -> buf == NULL || info -> index + 1 >= info -> read_bytes)
 	{
-		free(info -> buf);
+		if (info -> buf)
+			free(info -> buf);
 		info->buf = (char *)ft_calloc(sizeof(char),BUFFER_SIZE);
 		if (info->buf == NULL)
 			return (info -> sign = ERR);
@@ -71,6 +72,8 @@ char    *get_next_line(int fd)
 	i = 0;
 	mallocsize = 0;
 	line = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	while (fd_read_buf(&fd_info,fd) == 1)
 	{
 		if (i + 1 >= mallocsize)
