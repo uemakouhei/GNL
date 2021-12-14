@@ -31,7 +31,7 @@ static ssize_t fd_read_buf(t_fd_info *info,int fd)
 	return (1);
 }
 
-static ssize_t ft_memcat(char **line,t_fd_info *info,ssize_t *mallocsize)
+static ssize_t ft_memcat(char **line,ssize_t *mallocsize)
 {
 	void *ptr;
 
@@ -40,15 +40,14 @@ static ssize_t ft_memcat(char **line,t_fd_info *info,ssize_t *mallocsize)
 	{
 		*mallocsize = INITIAL_ALLOCATE_SIZE;
 		*line = (char *)malloc(sizeof(char) * *mallocsize);
+		if (*line == NULL)
+			return (0);
 	}
 	else 
 	{
 		ptr = (char *)malloc(sizeof(char) * (*mallocsize * 2));
 		if (ptr == NULL)
-		{
-			info -> sign = ERR;
 			return (0);
-		}
 		ft_memcpy(ptr,*line,*mallocsize);
 		*mallocsize *= 2;
 		free(*line);
@@ -69,12 +68,8 @@ char    *get_next_line(int fd)
 	while (fd_read_buf(&fd_info,fd) == 1)
 	{
 		if (i + 1 >= mallocsize)
-		{
-			if (!ft_memcat(&line,&fd_info,&mallocsize))
+			if (!ft_memcat(&line,&mallocsize))
 				return (NULL);
-			//mallocsize = 256;
-			//line = (char *)malloc(sizeof(char) * 256);
-		}
 		line[i] = fd_info.buf[fd_info.index];
 		if (line[i++] == '\n')
 			return (line);
