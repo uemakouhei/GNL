@@ -4,7 +4,6 @@ static char     *safely_return(t_fd_info *info,char **line)
 	free(info -> buf);
 	if (info -> sign == EndofFile)
 	{
-		printf("%ld\n",info -> read_bytes);
 		info -> buf = NULL;
 		return(*line);
 	}
@@ -17,7 +16,7 @@ static ssize_t fd_read_buf(t_fd_info *info,int fd)
 {
 	if (info -> buf == NULL || info -> index + 1 >= info -> read_bytes)
 	{
-		if (info -> buf)
+		if (info -> sign == 1)
 			free(info -> buf);
 		info->buf = (char *)ft_calloc(sizeof(char),BUFFER_SIZE);
 		if (info->buf == NULL)
@@ -74,7 +73,7 @@ char    *get_next_line(int fd)
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	while (fd_read_buf(&fd_info,fd) == 1)
+	while ((fd_info.sign = fd_read_buf(&fd_info,fd)) == 1)
 	{
 		if (i + 1 >= mallocsize)
 			if (!ft_memcat(&line,&fd_info,&mallocsize))
