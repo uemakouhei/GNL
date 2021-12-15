@@ -9,8 +9,8 @@
 #  define INITIAL_ALLOCATE_SIZE 100
 # endif
 	
-# ifndef TEST_COUNT
-#  define TEST_COUNT 5
+# ifndef MAX_BUF
+#  define MAX_BUF 1024
 # endif
 # define ERR -1
 # define EndofFile -2

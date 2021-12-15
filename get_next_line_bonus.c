@@ -61,43 +61,27 @@ static ssize_t ft_memcat(char **line,t_fd_info *info,size_t *mallocsize)
 	}
 	return (1);
 };
-static char *re_getnextline(size_t *i, size_t *size, char **line,int fd)
-{
-	size_t count;
-	char    *get_next_line(int fd);	
-	char *(*p)(int );
-	p = get_next_line;
-	ft_memcpy((void *)p,(void *)get_next_line,sizeof(p));
-	count = 0;
-	*i = 0;
-	*size = 0;
-	*line = NULL;
-	return (p(fd));
-}
 
 char    *get_next_line(int fd)
 {
 	char *line;
-	static t_fd_info fd_info = {0};; 
+	static t_fd_info fd_info[MAX_BUF] = {{0}}; 
 	size_t mallocsize;
 	size_t i;
 
-	fd_info.save_fd = fd;
 	i = 0;
 	mallocsize = 0;
 	line = NULL;
-	if (fd != fd_info.save_fd)
-		return(re_getnextline(&i,&mallocsize,&line,fd));
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	while ((fd_info.sign = fd_read_buf(&fd_info,fd)) == 1)
+	while ((fd_info[fd].sign = fd_read_buf(&fd_info[fd],fd)) == 1)
 	{
 		if (i + 1 >= mallocsize)
-			if (!ft_memcat(&line,&fd_info,&mallocsize))
+			if (!ft_memcat(&line,&fd_info[fd],&mallocsize))
 				return (NULL);
-		line[i] = fd_info.buf[fd_info.index];
+		line[i] = fd_info[fd].buf[fd_info[fd].index];
 		if (line[i++] == '\n')
 			return (line);
 	}
-	return(safely_return(&fd_info,&line));
+	return(safely_return(&fd_info[fd],&line));
 };
